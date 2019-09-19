@@ -13,18 +13,50 @@ const FormField = ({ formData, id, change }) => {
     return errorMessage;
   }
 
+  const renderLabel = (formData) => (
+    formData.showLabel ?
+      <div className="label_input">
+        {formData.config.label}
+      </div>
+    :
+      null
+  )
+
+
   const renderTemplate = () => {
     let formTemplate = null;
     switch (formData.element) {
       case 'input':
         formTemplate = (
           <div>
+           {renderLabel(formData)}
             <input 
               {...formData.config}
               value={formData.value}
               onChange={(event) => change({event, id})}
             />
             { showError() }
+          </div>
+        );
+        break;
+      case 'select':
+        formTemplate = (
+          <div>
+            {renderLabel(formData)}
+            <select
+              value={formData.value}
+              onChange={(event) => change({event, id})}
+            >
+              <option value="">Select one</option>
+              {
+                formData.config.options.map( item => (
+                  <option key={item.key} value={item.key}>
+                    {item.value}
+                  </option>
+                ))
+              }
+            </select>
+            {showError()}
           </div>
         );
         break;
