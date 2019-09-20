@@ -11,7 +11,7 @@ const AdminNav = () => {
     },
     {
       title: 'Add Match',
-      to: '/admin/edit/match'
+      to: '/admin/add/match'
     },
     {
       title: 'Players',
