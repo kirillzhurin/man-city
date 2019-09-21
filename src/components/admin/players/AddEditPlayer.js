@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import AdminLayout from '../../../hoc/AdminLayout';
 import { firebasePlayers, firebase, firebaseDB } from '../../../firebase';
-import { firebaseLooper } from '../../ui/misc';
 import FormField from '../../ui/FormFields';
 import { validate } from '../../ui/misc';
 import FileUploader from '../../ui/FileUploader';

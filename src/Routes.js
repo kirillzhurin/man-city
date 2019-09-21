@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from './hoc/Layout';
-import { Switch, Route } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
 
 import PrivateRoute from './components/auth-routes/PrivateRoute';
 import PublicRoute from './components/auth-routes/PublicRoute';
