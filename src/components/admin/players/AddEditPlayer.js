@@ -103,8 +103,13 @@ class AddEditPlayer extends Component {
         const snapshot = await firebaseDB.ref(`players/${playerId}`).once('value');
         const player = snapshot.val();
         player['id'] = playerId;
-        const url = await firebase.storage().ref('players').child(player.image).getDownloadURL();        
-        this.updateFields(player, 'Edit Player', url);
+        try {
+          const url = await firebase.storage().ref('players').child(player.image).getDownloadURL();        
+          this.updateFields(player, 'Edit Player', url);
+        } catch (error) {
+          this.updateFields(player, 'Edit Player'); 
+        }
+        
       } catch (error) {
         
       }
