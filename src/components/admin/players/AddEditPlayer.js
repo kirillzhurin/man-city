@@ -29,7 +29,7 @@ class AddEditPlayer extends Component {
         validationMessage: '',
         showLabel: true
       },
-      lastName: {
+      lastname: {
         element: 'input',
         value: '',
         config: {
@@ -86,7 +86,7 @@ class AddEditPlayer extends Component {
         validation: {
           required: true
         },
-        valid: true
+        valid: false
       }
     }
   }
@@ -143,10 +143,15 @@ class AddEditPlayer extends Component {
     }, 2000);
   }
 
-  onChange = (element) => {
+  onChange = (element, content = '') => {
     const newFormData = { ...this.state.formData };
-    newFormData[element.id].value = element.event.target.value;
-
+    
+    if (content === '') {
+      newFormData[element.id].value = element.event.target.value;
+    } else {
+      newFormData[element.id].value = content;
+    }
+    
     let validData = validate(newFormData[element.id]);
 
     newFormData[element.id].valid = validData[0];
@@ -169,19 +174,19 @@ class AddEditPlayer extends Component {
     }
 
     if (formIsValid) {
-      // try {
-      //   if (this.state.formType === 'Edit Player') {
-      //     await firebaseDB.ref(`players/${this.state.matchId}`).update(dataToSubmit);
-      //     this.successForm('Updated correctly');
-      //   } else {
-      //     await firebasePlayers.push(dataToSubmit);
-      //     this.props.history.push('/admin/matches');
-      //   }
-      // } catch (error) {
-      //   this.setState({
-      //     formError: true
-      //   })
-      // }
+      try {
+        if (this.state.formType === 'Edit Player') {
+          // await firebaseDB.ref(`players/${this.state.matchId}`).update(dataToSubmit);
+          // this.successForm('Updated correctly');
+        } else {
+          await firebasePlayers.push(dataToSubmit);
+          this.props.history.push('/admin/players');
+        }
+      } catch (error) {
+        this.setState({
+          formError: true
+        })
+      }
       
     } else {
       this.setState({
@@ -191,11 +196,18 @@ class AddEditPlayer extends Component {
   }
 
   resetImage = () => {
+    const newFormData = {...this.state.formData};
+    newFormData['image'].value = '';
+    newFormData['image'].valid = false;
+    this.setState({
+      defaultImg: '',
+      formData: newFormData
+    })
 
   }
 
   storeFilename= (filename) => {
-
+    this.onChange({ id: 'image' }, filename)
   }
 
   render() {
@@ -222,7 +234,7 @@ class AddEditPlayer extends Component {
               />
               <FormField
                 id={'lastname'}
-                formData={this.state.formData.lastName}
+                formData={this.state.formData.lastname}
                 change={this.onChange}
               />
               <FormField

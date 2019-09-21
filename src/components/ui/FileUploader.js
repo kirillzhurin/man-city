@@ -42,11 +42,19 @@ class FileUploader extends Component {
 
     this.setState({
       fileUrl: url
-    })
+    });
+
+    this.props.filename(filename);
   }
 
   uploadAgain = () => {
+    this.setState({
+      name: '',
+      isUploading: false,
+      fileUrl: ''
+    });
 
+    this.props.resetImage();
   }
 
   render() {
