@@ -95,7 +95,6 @@ class AddEditPlayer extends Component {
     const playerId = this.props.match.params.id;
     
     if (!playerId) {
-      this.updateFields(false, 'Add Player');
       this.setState({
         formType: 'Add Player'
       })
@@ -103,28 +102,28 @@ class AddEditPlayer extends Component {
       try {
         const snapshot = await firebaseDB.ref(`players/${playerId}`).once('value');
         const player = snapshot.val();
-        player['id'] = playerId
-        //this.updateFields(player, 'Edit Match')
+        player['id'] = playerId;
+        const url = await firebase.storage().ref('players').child(player.image).getDownloadURL();        
+        this.updateFields(player, 'Edit Player', url);
       } catch (error) {
         
       }
     }
   }
 
-  updateFields(player, type) {
+  updateFields(player, type, defaultImg) {
     const newFormData = {
-      ...this.state.formData,
+      ...this.state.formData
     }
     
     for(let key in newFormData) {
-      if (player) {
-        newFormData[key].value = player[key];
-        newFormData[key].valid = true;
-      }
+      newFormData[key].value = player[key];
+      newFormData[key].valid = true;
     }
 
     this.setState({
       playerId: player.id,
+      defaultImg,
       formType: type,
       formData: newFormData,
     })
@@ -176,8 +175,8 @@ class AddEditPlayer extends Component {
     if (formIsValid) {
       try {
         if (this.state.formType === 'Edit Player') {
-          // await firebaseDB.ref(`players/${this.state.matchId}`).update(dataToSubmit);
-          // this.successForm('Updated correctly');
+          await firebaseDB.ref(`players/${this.state.playerId}`).update(dataToSubmit);
+          this.successForm('Updated correctly');
         } else {
           await firebasePlayers.push(dataToSubmit);
           this.props.history.push('/admin/players');
